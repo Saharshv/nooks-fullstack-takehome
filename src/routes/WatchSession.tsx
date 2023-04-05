@@ -5,6 +5,7 @@ import { Box, Button, TextField, Tooltip } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+import axios from "axios";
 
 const WatchSession: React.FC = () => {
   const { sessionId } = useParams();
@@ -15,22 +16,26 @@ const WatchSession: React.FC = () => {
 
   useEffect(() => {
     // load video by session ID -- right now we just hardcode a constant video but you should be able to load the video associated with the session
-    setUrl("https://www.youtube.com/watch?v=NX1eKLReSpY");
+    if (sessionId) {
+      axios
+        .get(`http://localhost:8080/session/${sessionId}`)
+        .then(function (response) {
+          setUrl(response.data.youtubeUrl);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      navigate(`/create`);
+    }
 
     // if session ID doesn't exist, you'll probably want to redirect back to the home / create session page
-  }, [sessionId]);
+  }, [navigate, sessionId]);
 
   if (!!url) {
     return (
       <>
-        <Box
-          width="100%"
-          maxWidth={1000}
-          display="flex"
-          gap={1}
-          marginTop={1}
-          alignItems="center"
-        >
+        <Box width="100%" maxWidth={1000} display="flex" gap={1} marginTop={1} alignItems="center">
           <TextField
             label="Youtube URL"
             variant="outlined"
