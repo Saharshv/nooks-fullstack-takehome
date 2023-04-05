@@ -12,6 +12,7 @@
 # production
 /build
 /backend/dist
+/backend/watch_party.db
 
 # misc
 .DS_Store
