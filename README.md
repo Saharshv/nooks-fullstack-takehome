@@ -10,8 +10,8 @@ We want to respect your time, so please don't spend more than 5 hours on this, e
 
 ### Instructions
 
-To run the app simply "npm i" and then "cd backend"
-To start the backend server, "npm run dev".
+First install all the dependencies, do "npm i" and then "cd backend" and do "npm i".
+To start the backend server, "npm run dev" inside the backend folder.
 To start the frontend app, "cd .." and then "npm start".
 
 ### Problem
@@ -53,13 +53,13 @@ In order to sync the video, you’ll need to know when any user plays, pauses, o
 
 ### Required Functionality
 
-- [ ] **Creating a session**. Any user should be able to create a session to watch a given Youtube video.
-- [ ] **Joining a session**. Any user should be able to join a session created by another user using the shareable session link.
-- [ ] **Playing/pausing** the video. When a participant pauses the video, it should pause for everyone. When a participant plays the video, it should start playing for everyone.
-- [ ] **“Seek”**. When someone jumps to a certain time in the video it should jump to that time for everyone.
-- [ ] **Late to the party**... Everything should stay synced even if a user joins the watch party late (e.g. the video is already playing)
-- [ ] **Player controls.** All the player controls (e.g. play, pause, and seek) should be intuitive and behave as expected. For play, pause & seek operations you can use the built-in YouTube controls or disable the YouTube controls and build your own UI (including a slider for the seek operation)
-- [ ] **Replay**... replaying a watch party should replay all the events that happened during the watch party, in the order and timeline that they happened. It should look exactly like a live recording of the watch party.
+- [x] **Creating a session**. Any user should be able to create a session to watch a given Youtube video.
+- [x] **Joining a session**. Any user should be able to join a session created by another user using the shareable session link.
+- [x] **Playing/pausing** the video. When a participant pauses the video, it should pause for everyone. When a participant plays the video, it should start playing for everyone.
+- [x] **“Seek”**. When someone jumps to a certain time in the video it should jump to that time for everyone.
+- [x] **Late to the party**... Everything should stay synced even if a user joins the watch party late (e.g. the video is already playing)
+- [x] **Player controls.** All the player controls (e.g. play, pause, and seek) should be intuitive and behave as expected. For play, pause & seek operations you can use the built-in YouTube controls or disable the YouTube controls and build your own UI (including a slider for the seek operation)
+- [x] **Replay**... replaying a watch party should replay all the events that happened during the watch party, in the order and timeline that they happened. It should look exactly like a live recording of the watch party.
 
 ### Bonus Functionality
 
