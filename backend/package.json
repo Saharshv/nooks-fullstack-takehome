@@ -20,6 +20,7 @@
     "sqlite3": "https://github.com/tryghost/node-sqlite3/tarball/master"
   },
   "devDependencies": {
+    "@types/express-serve-static-core": "^4.17.33",
     "@types/cors": "^2.8.13",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.17",
