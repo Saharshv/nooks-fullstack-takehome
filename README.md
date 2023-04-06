@@ -10,9 +10,17 @@ We want to respect your time, so please don't spend more than 5 hours on this, e
 
 ### Instructions
 
-First install all the dependencies, do "npm i" and then "cd backend" and do "npm i".
-To start the backend server, "npm run dev" inside the backend folder.
-To start the frontend app, "cd .." and then "npm start".
+- First install all the dependencies, do "npm i" and then "cd backend" and do "npm i".
+- To start the backend server, "npm run dev" inside the backend folder.
+- To start the frontend app, "cd .." and then "npm start".
+
+### Improvements to do
+- Add Error Handling
+- Add Data Validation checks like youtube videos only.
+- Implement a custom slider to handle seek seamlessly.
+- There's an issue with the dependencies leading to first installing dependencies of frontend and then backend's and then running backend server.
+- Switching to another video.
+- Use sockets in a better way. If one client pauses, then all the other clients emit the action as well because the onPlay/onPause methods get executed.
 
 ### Problem
 
