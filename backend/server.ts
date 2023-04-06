@@ -4,8 +4,8 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import http from "http";
 import { Server } from "socket.io";
-import { createSession, getSessionDetails } from "./create_db";
-import { SessionDetails, SessionDetailsUsers } from "../types";
+import { addAction, createSession, getAllActions, getSessionDetails } from "./create_db";
+import { GetActionsResponse, SessionDetails, SessionDetailsUsers } from "../types";
 
 dotenv.config();
 
@@ -56,6 +56,17 @@ app.get("/session/:sessionId", (req, res) => {
   });
 });
 
+app.get("/session/:sessionId/actions", (req, res) => {
+  getAllActions(req.params.sessionId).then((actions) => {
+    res.status(201);
+    let processedActions: GetActionsResponse[] = [];
+    for (let i = 0; i < actions.length; i++) {
+      processedActions.push({ ...actions[i], timestamp: Date.parse(actions[i].timestamp) });
+    }
+    res.send({ actions: processedActions });
+  });
+});
+
 // this block will run when the client connects
 io.on("connection", (socket) => {
   socket.on("joinSession", (sessionId) => {
@@ -80,6 +91,7 @@ io.on("connection", (socket) => {
       socket.to(sessionId).emit("sessionDetails", {
         ...sessionDetails,
       });
+      addAction(sessionId, action, sessionDetails.playedSeconds);
     } else {
       // Error
     }

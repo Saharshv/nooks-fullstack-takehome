@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import VideoPlayer from "../components/VideoPlayer";
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Button, TextField, Tooltip } from "@mui/material";
@@ -6,13 +6,17 @@ import LinkIcon from "@mui/icons-material/Link";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import axios from "axios";
+import io, { Socket } from "socket.io-client";
+import { VideoPlayerRef } from "../../types";
 
 const WatchSession: React.FC = () => {
   const { sessionId } = useParams();
   const navigate = useNavigate();
   const [url, setUrl] = useState<string | null>(null);
-
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [linkCopied, setLinkCopied] = useState(false);
+  const [paused, setPaused] = useState<boolean>(true);
+  const videoPlayer = useRef<VideoPlayerRef>(null);
 
   useEffect(() => {
     // load video by session ID -- right now we just hardcode a constant video but you should be able to load the video associated with the session
@@ -31,6 +35,67 @@ const WatchSession: React.FC = () => {
 
     // if session ID doesn't exist, you'll probably want to redirect back to the home / create session page
   }, [navigate, sessionId]);
+
+  useEffect(() => {
+    const newSocket = io(`http://localhost:8080`);
+    setSocket(newSocket);
+    return () => {
+      newSocket.close();
+    };
+  }, [setSocket]);
+
+  useEffect(() => {
+    if (socket) {
+      const sessionDetailsListener = (sessionDetails: {
+        youtubeUrl: string;
+        playedSeconds: number;
+        paused: boolean;
+      }) => {
+        if (paused !== sessionDetails.paused) setPaused(sessionDetails.paused);
+        if (
+          videoPlayer.current &&
+          Math.abs(videoPlayer.current.getCurrentTime() - sessionDetails.playedSeconds) > 1
+        )
+          videoPlayer.current?.seekTo(sessionDetails.playedSeconds);
+        console.log("got details");
+      };
+
+      socket.on("sessionDetails", sessionDetailsListener);
+
+      return () => {
+        socket.off("sessionDetails", sessionDetailsListener);
+      };
+    }
+  }, [paused, socket]);
+
+  const emitJoin = () => {
+    console.log("joined");
+    socket?.emit("joinSession", sessionId);
+  };
+
+  // Emits action to the server
+  const emitAction = (action: string, paused: boolean) => {
+    console.log("action");
+    socket?.emit(
+      "action",
+      sessionId,
+      {
+        youtubeUrl: url,
+        playedSeconds: videoPlayer.current?.getCurrentTime(),
+        paused,
+      },
+      action
+    );
+  };
+
+  // Emits progress to the server
+  const emitProgress = (playedSeconds: number) => {
+    socket?.emit("progress", sessionId, {
+      youtubeUrl: url,
+      paused,
+      playedSeconds: playedSeconds,
+    });
+  };
 
   if (!!url) {
     return (
@@ -83,7 +148,17 @@ const WatchSession: React.FC = () => {
             </Button>
           </Tooltip>
         </Box>
-        <VideoPlayer url={url} />;
+        <VideoPlayer
+          url={url}
+          ref={videoPlayer}
+          paused={paused}
+          socket={socket}
+          emitAction={emitAction}
+          emitProgress={emitProgress}
+          emitJoin={emitJoin}
+          setPaused={setPaused}
+        />
+        ;
       </>
     );
   }
