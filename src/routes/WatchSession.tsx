@@ -70,6 +70,7 @@ const WatchSession: React.FC = () => {
 
   const emitJoin = () => {
     console.log("joined");
+    videoPlayer.current?.seekTo(0);
     socket?.emit("joinSession", sessionId);
   };
 

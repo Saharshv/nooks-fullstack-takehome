@@ -44,6 +44,7 @@ const ReplaySession: React.FC = () => {
   }, [navigate, sessionId]);
 
   const onJoin = () => {
+    videoPlayer.current?.seekTo(0);
     setPaused(false);
     onReplayStart(0);
   };
